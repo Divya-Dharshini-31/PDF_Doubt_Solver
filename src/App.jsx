@@ -4,18 +4,26 @@ function App() {
   const [pdfName, setPdfName] = useState("");
   const [question, setQuestion] = useState("");
   const [answer, setAnswer] = useState("");
+  const [summary, setSummary] = useState("");
 
   const handlePdfUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
       setPdfName(file.name);
+      // Here later you can parse/send to backend
     }
   };
 
   const handleAsk = () => {
     if (!question) return;
-    // Dummy answer for demo
+    // Dummy answer for now, replace with real API call
     setAnswer(`Here’s a sample answer for: "${question}"`);
+  };
+
+  const handleSummarize = () => {
+    if (!pdfName) return;
+    // Dummy summary for now, replace with backend
+    setSummary(`Summary for "${pdfName}" generated successfully!`);
   };
 
   return (
@@ -33,6 +41,8 @@ function App() {
       <div
         style={{
           width: "60%",
+          height: "auto",
+          justifyContent: "center",
           background: "#c1d9f8",
           padding: "40px",
           boxSizing: "border-box",
@@ -46,7 +56,16 @@ function App() {
       >
         <h1 style={{ color: "#333", margin: 0 }}>PDF Doubt Solver</h1>
 
-        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "10px", width: "100%" }}>
+        {/* File Upload */}
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            gap: "10px",
+            width: "100%",
+          }}
+        >
           <input
             type="file"
             accept="application/pdf"
@@ -66,7 +85,15 @@ function App() {
           )}
         </div>
 
-        <div style={{ display: "flex", gap: "10px", width: "50%", justifyContent: "center" }}>
+        {/* Question box + Ask button */}
+        <div
+          style={{
+            display: "flex",
+            gap: "10px",
+            width: "50%",
+            justifyContent: "center",
+          }}
+        >
           <input
             type="text"
             placeholder="Ask a question..."
@@ -82,20 +109,56 @@ function App() {
           />
           <button
             onClick={handleAsk}
+            disabled={!pdfName}
             style={{
               padding: "10px 20px",
               border: "none",
               borderRadius: "8px",
-              backgroundColor: "#66a6ff",
+              backgroundColor: pdfName ? "#66a6ff" : "#aaa",
               color: "#fff",
               fontWeight: "bold",
-              cursor: "pointer",
+              cursor: pdfName ? "pointer" : "not-allowed",
             }}
           >
             Ask
           </button>
         </div>
 
+        {/* Summarize Button (moved below Ask) */}
+        <button
+          onClick={handleSummarize}
+          disabled={!pdfName}
+          style={{
+            padding: "10px 20px",
+            border: "none",
+            borderRadius: "8px",
+            backgroundColor: pdfName ? "#4caf50" : "#aaa",
+            color: "#fff",
+            fontWeight: "bold",
+            cursor: pdfName ? "pointer" : "not-allowed",
+          }}
+        >
+          Summarize
+        </button>
+
+        {/* Show Summary */}
+        {summary && (
+          <div
+            style={{
+              marginTop: "10px",
+              padding: "15px",
+              background: "#f9f9f9",
+              textAlign: "left",
+              borderRadius: "8px",
+              width: "80%",
+            }}
+          >
+            <h3 style={{ marginBottom: "10px", color: "#333" }}>Summary:</h3>
+            <p style={{ margin: 0 }}>{summary}</p>
+          </div>
+        )}
+
+        {/* Answer Box */}
         {answer && (
           <div
             style={{
